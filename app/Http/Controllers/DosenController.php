@@ -9,21 +9,21 @@ use Illuminate\Support\Facades\Storage;
 
 class DosenController extends Controller
 {
-    // ================= MODUL 3: PENGAJUAN =================
     public function indexModul3() {
-        $data = PengajuanKebutuhan::latest()->get();
+        // Dosen hanya melihat pengajuannya sendiri
+        $data = PengajuanKebutuhan::where('user_id', auth()->id())->latest()->get();
         return view('dosen.modul3', compact('data'));
     }
 
     public function storeModul3(Request $request) {
         $request->validate([
-            'nama_pemohon' => 'required',
             'spesifikasi' => 'required',
             'alasan' => 'required',
         ]);
 
         PengajuanKebutuhan::create([
-            'nama_pemohon' => $request->nama_pemohon,
+            'user_id' => auth()->id(),
+            'nama_pemohon' => auth()->user()->name, // <-- Nama Otomatis
             'jenis_kebutuhan' => $request->jenis_kebutuhan,
             'spesifikasi' => $request->spesifikasi,
             'alasan' => $request->alasan,
@@ -33,7 +33,6 @@ class DosenController extends Controller
         return redirect()->route('dosen.modul3')->with('success', 'Pengajuan berhasil dikirim!');
     }
 
-    // ================= MODUL 7: SOP & DOKUMEN =================
     public function indexModul7() {
         $data = SopDokumen::all();
         return view('dosen.modul7', compact('data'));

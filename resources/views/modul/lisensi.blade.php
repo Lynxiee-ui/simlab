@@ -9,42 +9,21 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3">
-            <div class="card stat-card card-total p-3">
-                <h5>Total Lisensi</h5>
-                <h2 class="fw-bold">{{ $data->count() }}</h2>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card card-aktif p-3">
-                <h5>Aktif</h5>
-                <h2 class="fw-bold">{{ $data->where('status', 'Aktif')->count() }}</h2>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card card-expired p-3">
-                <h5>Menjelang Expired</h5>
-                <h2 class="fw-bold">{{ $data->where('status', 'Menjelang Expired')->count() }}</h2>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card card-none p-3">
-                <h5>Non-Aktif</h5>
-                <h2 class="fw-bold">{{ $data->where('status', 'Non-Aktif')->count() }}</h2>
-            </div>
-        </div>
+        <div class="col-md-3"><div class="card stat-card card-total p-3"><h5>Total</h5><h2 class="fw-bold">{{ $data->count() }}</h2></div></div>
+        <div class="col-md-3"><div class="card stat-card card-aktif p-3"><h5>Aktif</h5><h2 class="fw-bold">{{ $data->where('status', 'Aktif')->count() }}</h2></div></div>
+        <div class="col-md-3"><div class="card stat-card card-expired p-3"><h5>Expired</h5><h2 class="fw-bold">{{ $data->where('status', 'Menjelang Expired')->count() }}</h2></div></div>
+        <div class="col-md-3"><div class="card stat-card card-none p-3"><h5>Non-Aktif</h5><h2 class="fw-bold">{{ $data->where('status', 'Non-Aktif')->count() }}</h2></div></div>
     </div>
 
     <div class="card card-custom">
-        <div class="card-header bg-white border-0 pt-3">
-            <h5 class="mb-0 text-secondary">Daftar Software</h5>
-        </div>
+        <div class="card-header bg-white border-0 pt-3"><h5 class="mb-0 text-secondary">Daftar Software</h5></div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
                             <th>Nama Software</th>
+                            <th>Ruangan</th>
                             <th>Lisensi Key</th>
                             <th>Tipe</th>
                             <th>Status</th>
@@ -56,31 +35,25 @@
                         @forelse($data as $d)
                         <tr>
                             <td class="fw-bold">{{ $d->nama_software }}</td>
+                            <td><span class="badge bg-info">{{ $d->ruangan ?? '-' }}</span></td>
                             <td><code>{{ $d->lisensi_key }}</code></td>
                             <td><span class="badge bg-info text-dark">{{ $d->tipe_lisensi }}</span></td>
                             <td>
-                                @if($d->status == 'Aktif')
-                                    <span class="badge bg-success">Aktif</span>
-                                @elseif($d->status == 'Menjelang Expired')
-                                    <span class="badge bg-warning text-dark">Menjelang Expired</span>
-                                @else
-                                    <span class="badge bg-secondary">Non-Aktif</span>
-                                @endif
+                                @if($d->status == 'Aktif') <span class="badge bg-success">Aktif</span>
+                                @elseif($d->status == 'Menjelang Expired') <span class="badge bg-warning text-dark">Menjelang Expired</span>
+                                @else <span class="badge bg-secondary">Non-Aktif</span> @endif
                             </td>
                             <td>{{ $d->tanggal_mulai }} s/d {{ $d->tanggal_berakhir }}</td>
                             <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editLisensiModal{{ $d->id }}">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <form action="{{ route('modul2.destroy', $d->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
-                                    @csrf
-                                    @method('DELETE')
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editLisensiModal{{ $d->id }}"><i class="bi bi-pencil-square"></i></button>
+                                <form action="{{ route('modul2.destroy', $d->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus?')">
+                                    @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="6" class="text-center text-muted py-4">Belum ada data lisensi.</td></tr>
+                        <tr><td colspan="7" class="text-center text-muted py-4">Belum ada data lisensi.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -95,18 +68,19 @@
             <div class="modal-content border-0 shadow-lg">
                 <form action="{{ route('modul2.store') }}" method="POST">
                     @csrf
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Tambah Lisensi Baru</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
+                    <div class="modal-header bg-primary text-white"><h5 class="modal-title">Tambah Lisensi Baru</h5></div>
                     <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Nama Software</label>
-                            <input type="text" name="nama" class="form-control" placeholder="Contoh: Adobe Photoshop" required>
+                            <input type="text" name="nama" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ruangan</label>
+                            <input type="text" name="ruangan" class="form-control" placeholder="Contoh: Lab Komputer 1">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Lisensi Key</label>
-                            <input type="text" name="lisensi_key" class="form-control" placeholder="XXXX-XXXX-XXXX">
+                            <input type="text" name="lisensi_key" class="form-control">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -127,20 +101,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tanggal Mulai</label>
-                                <input type="date" name="tanggal_mulai" class="form-control" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tanggal Berakhir</label>
-                                <input type="date" name="tanggal_berakhir" class="form-control" required>
-                            </div>
+                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Mulai</label><input type="date" name="tanggal_mulai" class="form-control" required></div>
+                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Berakhir</label><input type="date" name="tanggal_berakhir" class="form-control" required></div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-primary">Simpan</button></div>
                 </form>
             </div>
         </div>
@@ -151,16 +116,16 @@
         <div class="modal-dialog">
             <div class="modal-content border-0 shadow-lg">
                 <form action="{{ route('modul2.update', $d->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-header bg-warning text-dark">
-                        <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Edit Lisensi</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
+                    @csrf @method('PUT')
+                    <div class="modal-header bg-warning text-dark"><h5 class="modal-title">Edit Lisensi</h5></div>
                     <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Nama Software</label>
                             <input type="text" name="nama" class="form-control" value="{{ $d->nama_software }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ruangan</label>
+                            <input type="text" name="ruangan" class="form-control" value="{{ $d->ruangan }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Lisensi Key</label>
@@ -185,20 +150,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tanggal Mulai</label>
-                                <input type="date" name="tanggal_mulai" class="form-control" value="{{ $d->tanggal_mulai }}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tanggal Berakhir</label>
-                                <input type="date" name="tanggal_berakhir" class="form-control" value="{{ $d->tanggal_berakhir }}" required>
-                            </div>
+                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Mulai</label><input type="date" name="tanggal_mulai" class="form-control" value="{{ $d->tanggal_mulai }}" required></div>
+                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Berakhir</label><input type="date" name="tanggal_berakhir" class="form-control" value="{{ $d->tanggal_berakhir }}" required></div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning">Update Data</button>
-                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-warning">Update</button></div>
                 </form>
             </div>
         </div>

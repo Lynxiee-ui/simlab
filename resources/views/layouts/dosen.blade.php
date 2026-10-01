@@ -38,6 +38,20 @@
                         <i class="bi bi-folder2-open"></i> SOP & Dokumen
                     </a>
                 </li>
+
+                <!-- INFO USER & LOGOUT -->
+                <li class="nav-item mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.2);">
+                    <div class="text-white px-3 mb-2">
+                        <small class="d-block opacity-75">Login sebagai:</small>
+                        <strong>{{ auth()->user()->name ?? 'Guest' }}</strong>
+                    </div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm w-100">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
+                </li>
             </ul>
         </div>
 
@@ -50,12 +64,20 @@
                 </div>
             @endif
 
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> {{ $errors->first() }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </div>
 </div>
 
 @yield('modals')
+@yield('scripts')
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
