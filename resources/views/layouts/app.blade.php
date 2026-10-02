@@ -40,23 +40,33 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('modul2.*') ? 'active' : '' }}" href="{{ route('modul2.lisensi') }}"><i class="bi bi-key"></i>Lisensi</a>
+                    <a class="nav-link {{ request()->routeIs('modul2.*') ? 'active' : '' }}" href="{{ route('modul2.lisensi') }}">
+                        <i class="bi bi-key"></i> Lisensi
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('modul3.*') ? 'active' : '' }}" href="{{ route('modul3.pengajuan') }}"><i class="bi bi-file-earmark-text"></i>Pengajuan</a>
+                    <a class="nav-link {{ request()->routeIs('modul3.*') ? 'active' : '' }}" href="{{ route('modul3.pengajuan') }}">
+                        <i class="bi bi-file-earmark-text"></i>Pengajuan
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('modul5.*') ? 'active' : '' }}" href="{{ route('modul5.jadwal') }}"><i class="bi bi-calendar-check"></i>Jadwal</a>
+                    <a class="nav-link {{ request()->routeIs('modul5.*') ? 'active' : '' }}" href="{{ route('modul5.jadwal') }}">
+                        <i class="bi bi-calendar-check"></i> Jadwal
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('modul6.*') ? 'active' : '' }}" href="{{ route('modul6.laporan') }}"><i class="bi bi-graph-up-arrow"></i>Laporan</a>
+                    <a class="nav-link {{ request()->routeIs('modul6.*') ? 'active' : '' }}" href="{{ route('modul6.laporan') }}">
+                        <i class="bi bi-graph-up-arrow"></i> Laporan
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('modul7.*') ? 'active' : '' }}" href="{{ route('modul7.sop') }}"><i class="bi bi-folder2-open"></i>SOP</a>
+                    <a class="nav-link {{ request()->routeIs('modul7.*') ? 'active' : '' }}" href="{{ route('modul7.sop') }}">
+                        <i class="bi bi-folder2-open"></i> SOP
+                    </a>
                 </li>
 
                 <!-- INFO USER & LOGOUT -->
@@ -98,7 +108,7 @@
 
 @yield('modals')
 
-<!-- PENTING: Yield untuk scripts -->
+<!-- Yield untuk scripts -->
 @yield('scripts')
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

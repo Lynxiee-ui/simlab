@@ -27,7 +27,6 @@
                             <th>Lisensi Key</th>
                             <th>Tipe</th>
                             <th>Status</th>
-                            <th>Masa Berlaku</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -37,15 +36,20 @@
                             <td class="fw-bold">{{ $d->nama_software }}</td>
                             <td><span class="badge bg-info">{{ $d->ruangan ?? '-' }}</span></td>
                             <td><code>{{ $d->lisensi_key }}</code></td>
-                            <td><span class="badge bg-info text-dark">{{ $d->tipe_lisensi }}</span></td>
+                            <td>
+                                @if($d->tipe_lisensi == 'Gratis')
+                                    <span class="badge bg-success">Gratis / Open Source</span>
+                                @else
+                                    <span class="badge bg-info text-dark">{{ $d->tipe_lisensi }}</span>
+                                @endif
+                            </td>
                             <td>
                                 @if($d->status == 'Aktif') <span class="badge bg-success">Aktif</span>
                                 @elseif($d->status == 'Menjelang Expired') <span class="badge bg-warning text-dark">Menjelang Expired</span>
                                 @else <span class="badge bg-secondary">Non-Aktif</span> @endif
                             </td>
-                            <td>{{ $d->tanggal_mulai }} s/d {{ $d->tanggal_berakhir }}</td>
                             <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editLisensiModal{{ $d->id }}"><i class="bi bi-pencil-square"></i></button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editLisensiModal{{ $d->id }}"><i class="bi bi-pencil-square"></i></button>
                                 <form action="{{ route('modul2.destroy', $d->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
@@ -53,7 +57,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="7" class="text-center text-muted py-4">Belum ada data lisensi.</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted py-4">Belum ada data lisensi.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -63,6 +67,7 @@
 @endsection
 
 @section('modals')
+    <!-- ============ Modal CREATE ============ -->
     <div class="modal fade" id="tambahLisensiModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content border-0 shadow-lg">
@@ -80,15 +85,16 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Lisensi Key</label>
-                            <input type="text" name="lisensi_key" class="form-control">
+                            <input type="text" name="lisensi_key" class="form-control" placeholder="Isi 'Free' jika gratis">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Tipe Lisensi</label>
-                                <select name="tipe_lisensi" class="form-select">
+                                <select name="tipe_lisensi" class="form-select" required>
                                     <option value="Bulanan">Bulanan</option>
                                     <option value="Tahunan">Tahunan</option>
                                     <option value="Perpetual">Perpetual</option>
+                                    <option value="Gratis">Gratis / Open Source</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -100,10 +106,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Mulai</label><input type="date" name="tanggal_mulai" class="form-control" required></div>
-                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Berakhir</label><input type="date" name="tanggal_berakhir" class="form-control" required></div>
-                        </div>
                     </div>
                     <div class="modal-footer"><button type="submit" class="btn btn-primary">Simpan</button></div>
                 </form>
@@ -111,6 +113,7 @@
         </div>
     </div>
 
+    <!-- ============ Modal EDIT ============ -->
     @foreach($data as $d)
     <div class="modal fade" id="editLisensiModal{{ $d->id }}" tabindex="-1">
         <div class="modal-dialog">
@@ -134,10 +137,11 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Tipe Lisensi</label>
-                                <select name="tipe_lisensi" class="form-select">
+                                <select name="tipe_lisensi" class="form-select" required>
                                     <option value="Bulanan" {{ $d->tipe_lisensi == 'Bulanan' ? 'selected' : '' }}>Bulanan</option>
                                     <option value="Tahunan" {{ $d->tipe_lisensi == 'Tahunan' ? 'selected' : '' }}>Tahunan</option>
                                     <option value="Perpetual" {{ $d->tipe_lisensi == 'Perpetual' ? 'selected' : '' }}>Perpetual</option>
+                                    <option value="Gratis" {{ $d->tipe_lisensi == 'Gratis' ? 'selected' : '' }}>Gratis / Open Source</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -148,10 +152,6 @@
                                     <option value="Non-Aktif" {{ $d->status == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Mulai</label><input type="date" name="tanggal_mulai" class="form-control" value="{{ $d->tanggal_mulai }}" required></div>
-                            <div class="col-md-6 mb-3"><label class="form-label fw-bold">Tanggal Berakhir</label><input type="date" name="tanggal_berakhir" class="form-control" value="{{ $d->tanggal_berakhir }}" required></div>
                         </div>
                     </div>
                     <div class="modal-footer"><button type="submit" class="btn btn-warning">Update</button></div>

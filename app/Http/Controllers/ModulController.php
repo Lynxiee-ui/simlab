@@ -42,8 +42,7 @@ class ModulController extends Controller
     public function storeLisensi(Request $request) {
         $request->validate([
             'nama' => 'required',
-            'tanggal_mulai' => 'required',
-            'tanggal_berakhir' => 'required',
+            'tipe_lisensi' => 'required',
         ]);
 
         SoftwareLicense::create([
@@ -51,9 +50,8 @@ class ModulController extends Controller
             'ruangan' => $request->ruangan,
             'lisensi_key' => $request->lisensi_key,
             'tipe_lisensi' => $request->tipe_lisensi,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_berakhir' => $request->tanggal_berakhir,
             'status' => $request->status,
+            // tanggal_mulai & tanggal_berakhir tidak diisi (NULL)
         ]);
 
         return redirect()->route('modul2.lisensi')->with('success', 'Lisensi berhasil ditambahkan!');
@@ -62,8 +60,7 @@ class ModulController extends Controller
     public function updateLisensi(Request $request, $id) {
         $request->validate([
             'nama' => 'required',
-            'tanggal_mulai' => 'required',
-            'tanggal_berakhir' => 'required',
+            'tipe_lisensi' => 'required',
         ]);
 
         $lisensi = SoftwareLicense::findOrFail($id);
@@ -72,8 +69,6 @@ class ModulController extends Controller
             'ruangan' => $request->ruangan,
             'lisensi_key' => $request->lisensi_key,
             'tipe_lisensi' => $request->tipe_lisensi,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_berakhir' => $request->tanggal_berakhir,
             'status' => $request->status,
         ]);
 
